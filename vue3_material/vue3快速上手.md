@@ -87,8 +87,6 @@ vite官网：https://vitejs.cn
 - 传统构建 与 vite构建对比图
 - ![](E:\DownLoad\MarkTextImage\2022-09-19-13-42-03-image.png)
 
-<img src="https://cn.vitejs.dev/assets/bundler.37740380.png" style="width:500px;height:280px;float:left" /><img src="https://cn.vitejs.dev/assets/esm.3070012d.png" style="width:480px;height:280px" />
-
 ```bash
 ## 创建工程
 npm init vite-app <project-name>
@@ -107,17 +105,27 @@ npm run dev
 ## 1.拉开序幕的setup
 
 1. 理解：Vue3.0中一个新的配置项，值为一个函数。
+
 2. setup是所有<strong style="color:#DD5145">Composition API（组合API）</strong><i style="color:gray;font-weight:bold">“ 表演的舞台 ”</i>。
+
 3. 组件中所用到的：数据、方法等等，均要配置在setup中。
+
 4. setup函数的两种返回值：
+   
    1. 若返回一个对象，则对象中的属性、方法, 在模板中均可以直接使用。（重点关注！）
    2. <span style="color:#aad">若返回一个渲染函数：则可以自定义渲染内容。（了解）</span>
+
 5. 注意点：
+   
    1. 尽量不要与Vue2.x配置混用
+      
       - Vue2.x配置（data、methos、computed...）中<strong style="color:#DD5145">可以访问到</strong>setup中的属性、方法。
       - 但在setup中<strong style="color:#DD5145">不能访问到</strong>Vue2.x配置（data、methos、computed...）。
       - 如果有重名, setup优先。
+   
    2. setup不能是一个async函数，因为返回值不再是return的对象, 而是promise, 模板看不到return对象中的属性。（后期也可以返回一个Promise实例，但需要Suspense和异步组件的配合）
+      
+      【想要取出属性，需要使用 .then】
 
 ## 2.ref函数
 
@@ -134,17 +142,36 @@ npm run dev
 ## 3.reactive函数
 
 - 作用: 定义一个<strong style="color:#DD5145">对象类型</strong>的响应式数据（基本类型不要用它，要用```ref```函数）
-- 语法：```const 代理对象= reactive(源对象)```接收一个对象（或数组），返回一个<strong style="color:#DD5145">代理对象（Proxy的实例对象，简称proxy对象）</strong>
-- reactive定义的响应式数据是“深层次的”。
-- 内部基于 ES6 的 Proxy 实现，通过代理对象操作源对象内部数据进行操作。
 
-## 4.Vue3.0中的响应式原理
+- 语法：```const 代理对象= reactive(源对象)```接收一个对象（或数组），返回一个<strong style="color:#DD5145">代理对象（Proxy的实例对象，简称proxy对象）</strong>
+
+- reactive定义的响应式数据是“深层次的”。
+
+- 内部基于 ES6 的 Proxy 实现，通过代理对象操作源对象内部数据进行操作。5.reactive对比ref
+
+- 从定义数据角度对比：
+  
+  - ref用来定义：<strong style="color:#DD5145">基本类型数据</strong>。
+  - reactive用来定义：<strong style="color:#DD5145">对象（或数组）类型数据</strong>。
+  - 备注：ref也可以用来定义<strong style="color:#DD5145">对象（或数组）类型数据</strong>, 它内部会自动通过```reactive```转为<strong style="color:#DD5145">代理对象</strong>。
+
+- 从原理角度对比：
+  
+  - ref通过``Object.defineProperty()``的```get```与```set```来实现响应式（数据劫持）。
+  - reactive通过使用<strong style="color:#DD5145">Proxy</strong>来实现响应式（数据劫持）, 并通过<strong style="color:#DD5145">Reflect</strong>操作<strong style="color:orange">源对象</strong>内部的数据。
+
+- 从使用角度对比：
+  
+  - ref定义的数据：操作数据<strong style="color:#DD5145">需要</strong>```.value```，读取数据时模板中直接读取<strong style="color:#DD5145">不需要</strong>```.value```。
+  - reactive定义的数据：操作数据与读取数据：<strong style="color:#DD5145">均不需要</strong>```.value```。
+
+## ## 4.Vue3.0中的响应式原理
 
 ### vue2.x的响应式
 
 - 实现原理：
   
-  - 对象类型：通过```Object.defineProperty()```对属性的读取、修改进行拦截（数据劫持）。
+  - 对象类型：通过`Object.defineProperty()`对属性的读取、修改进行拦截（数据劫持）。
   
   - 数组类型：通过重写更新数组的一系列方法来实现拦截。（对数组的变更方法进行了包裹）。
     
@@ -162,17 +189,17 @@ npm run dev
 
 ### Vue3.0的响应式
 
-- 实现原理: 
+- 实现原理:
   
-  - 通过Proxy（代理）:  拦截对象中任意属性的变化, 包括：属性值的读写、属性的添加、属性的删除等。
+  - 通过Proxy（代理）: 拦截对象中任意属性的变化, 包括：属性值的读写、属性的添加、属性的删除等。
   
-  - 通过Reflect（反射）:  对源对象的属性进行操作。
+  - 通过Reflect（反射）: 对源对象的属性进行操作。
   
   - MDN文档中描述的Proxy与Reflect：
     
-    - Proxy：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+    - Proxy：[Proxy - JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
     
-    - Reflect：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect
+    - Reflect：[Reflect - JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect)
       
       ```js
       new Proxy(data, {
@@ -192,19 +219,6 @@ npm run dev
       
       proxy.name = 'tom'   
       ```
-
-## 5.reactive对比ref
-
-- 从定义数据角度对比：
-  - ref用来定义：<strong style="color:#DD5145">基本类型数据</strong>。
-  - reactive用来定义：<strong style="color:#DD5145">对象（或数组）类型数据</strong>。
-  - 备注：ref也可以用来定义<strong style="color:#DD5145">对象（或数组）类型数据</strong>, 它内部会自动通过```reactive```转为<strong style="color:#DD5145">代理对象</strong>。
-- 从原理角度对比：
-  - ref通过``Object.defineProperty()``的```get```与```set```来实现响应式（数据劫持）。
-  - reactive通过使用<strong style="color:#DD5145">Proxy</strong>来实现响应式（数据劫持）, 并通过<strong style="color:#DD5145">Reflect</strong>操作<strong style="color:orange">源对象</strong>内部的数据。
-- 从使用角度对比：
-  - ref定义的数据：操作数据<strong style="color:#DD5145">需要</strong>```.value```，读取数据时模板中直接读取<strong style="color:#DD5145">不需要</strong>```.value```。
-  - reactive定义的数据：操作数据与读取数据：<strong style="color:#DD5145">均不需要</strong>```.value```。
 
 ## 6.setup的两个注意点
 
