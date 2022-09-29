@@ -44,11 +44,13 @@
 
 #### （一）监视ref定义的响应式数据
 
-![](E:\Learn\note\vue_note\img\learning-img\2022-09-24-22-30-40-image.png)
+<img title="" src="file:///E:/Learn/note/vue_note/img/learning-img/2022-09-24-22-30-40-image.png" alt="" data-align="center" width="515">
 
 #### （二）监视reactive定义的响应式数据
 
+<img title="" src="file:///E:/Learn/note/vue_note/img/learning-img/2022-09-25-21-27-46-image.png" alt="" data-align="center" width="526">
 
+<img title="" src="file:///E:/Learn/note/vue_note/img/learning-img/2022-09-25-21-29-43-image.png" alt="" width="461" data-align="center">
 
 ### 3.watchEffect函数
 
@@ -70,6 +72,6 @@
   })
   ```
 
-##### 复习：Vue的watch
+##### 复习：Vue2的watch
 
 ![](E:\Learn\note\vue_note\img\learning-img\2022-09-24-22-12-10-image.png)
